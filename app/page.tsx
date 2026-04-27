@@ -4,10 +4,13 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-export default function MobileKIApp() {
+export default function MobileKIAppFinal() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [activeTab, setActiveTab] = useState("dashboard");
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  
+  // STATE DINAMIS: Nama bisa diubah-ubah
+  const [namaBunda, setNamaBunda] = useState("Nadia Febriani");
 
   const handleLogin = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
@@ -16,41 +19,54 @@ export default function MobileKIApp() {
 
   // --- 1. MODAL MENU PROFIL (SLIDE UP) ---
   const ProfileModal = () => (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-end justify-center">
-      <div className="bg-white w-full max-w-md rounded-t-[3rem] p-8 animate-in slide-in-from-bottom duration-300 shadow-2xl">
-        <div className="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-8"></div>
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-end justify-center p-0">
+      <div className="bg-white w-full max-w-md rounded-t-[3.5rem] p-8 animate-in slide-in-from-bottom duration-300 shadow-2xl border-t border-pink-100">
+        <div className="w-16 h-1.5 bg-slate-200 rounded-full mx-auto mb-8"></div>
         
         <div className="text-center mb-8">
-          <div className="w-24 h-24 rounded-full border-4 border-pink-100 mx-auto mb-3 overflow-hidden shadow-md">
-            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Nadia" alt="User" />
+          <div className="w-24 h-24 rounded-full border-4 border-pink-200 mx-auto mb-4 overflow-hidden shadow-lg">
+            <img 
+              src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${namaBunda}`} 
+              alt="UserAvatar" 
+              className="bg-slate-100"
+            />
           </div>
-          <h3 className="text-xl font-bold text-slate-800">Nadia Febriani</h3>
-          <p className="text-slate-500 text-sm italic">Bunda Tangguh</p>
+          <h3 className="text-2xl font-bold text-slate-800">{namaBunda}</h3>
+          <p className="text-pink-400 font-medium">Bunda Siaga</p>
         </div>
 
-        <div className="grid grid-cols-1 gap-3">
-          <button className="flex items-center gap-4 p-4 hover:bg-pink-50 rounded-2xl transition-all text-slate-700">
-            <span className="text-xl">⚙️</span> <span className="font-semibold">Pengaturan Akun</span>
-          </button>
-          <button className="flex items-center gap-4 p-4 hover:bg-pink-50 rounded-2xl transition-all text-slate-700">
-            <span className="text-xl">✏️</span> <span className="font-semibold">Edit Data Bunda & Anak</span>
-          </button>
-          
-          <hr className="my-2 border-slate-100" />
-          
-          <button 
-            onClick={() => { setIsLoggedIn(false); setShowProfileMenu(false); }}
-            className="flex items-center gap-4 p-4 bg-red-50 hover:bg-red-100 rounded-2xl transition-all text-red-600 font-bold"
-          >
-            <span className="text-xl">🚪</span> Keluar Aplikasi
-          </button>
+        <div className="space-y-4">
+          {/* FITUR GANTI NAMA KREATIF */}
+          <div className="bg-slate-50 p-5 rounded-[2rem] border border-slate-100">
+            <label className="text-xs font-bold text-slate-400 uppercase ml-2 mb-2 block tracking-widest">Ganti Nama Bunda</label>
+            <Input 
+              value={namaBunda} 
+              onChange={(e) => setNamaBunda(e.target.value)}
+              placeholder="Ketik nama baru..."
+              className="bg-white rounded-full border-slate-200 h-12 px-6 focus:ring-pink-300"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 gap-2">
+            <button className="flex items-center gap-4 p-4 hover:bg-pink-50 rounded-2xl transition-all group">
+              <div className="w-10 h-10 bg-white shadow-sm rounded-xl flex items-center justify-center text-xl group-hover:bg-pink-100 transition-colors">⚙️</div>
+              <span className="font-semibold text-slate-700">Pengaturan Akun</span>
+            </button>
+            <button 
+              onClick={() => { setIsLoggedIn(false); setShowProfileMenu(false); }}
+              className="flex items-center gap-4 p-4 bg-red-50 hover:bg-red-100 rounded-2xl transition-all text-red-600 font-bold mt-2"
+            >
+              <div className="w-10 h-10 bg-white shadow-sm rounded-xl flex items-center justify-center text-xl">🚪</div>
+              Logout
+            </button>
+          </div>
         </div>
 
         <Button 
           onClick={() => setShowProfileMenu(false)}
-          className="w-full mt-6 rounded-full py-6 bg-slate-100 text-slate-500 hover:bg-slate-200"
+          className="w-full mt-8 rounded-full py-7 bg-pink-300 text-slate-800 font-bold hover:bg-pink-400 shadow-md"
         >
-          Tutup
+          Simpan & Kembali
         </Button>
       </div>
     </div>
@@ -59,113 +75,131 @@ export default function MobileKIApp() {
   // --- 2. HALAMAN LOGIN ---
   if (!isLoggedIn) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center p-4">
-        <div className="w-full max-w-[360px] space-y-8 text-center">
-          <div className="bg-pink-200 rounded-b-[100px] p-10 pb-16 shadow-sm relative">
-            <h2 className="text-xl font-bold text-slate-800 mb-6 uppercase tracking-widest">mobile-KIA</h2>
-            <div className="w-32 h-32 bg-white rounded-full mx-auto flex items-center justify-center border-4 border-white shadow-xl overflow-hidden text-6xl">👩‍🍼</div>
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+        <div className="w-full max-w-[380px] bg-white rounded-[3rem] shadow-2xl overflow-hidden border border-white">
+          <div className="bg-pink-200 rounded-b-[100px] p-12 pb-20 shadow-inner relative text-center">
+            <h2 className="text-2xl font-black text-slate-800 mb-8 tracking-[0.2em]">MOBILE-KIA</h2>
+            <div className="w-36 h-36 bg-white rounded-full mx-auto flex items-center justify-center border-8 border-pink-100 shadow-2xl text-7xl">👩‍🍼</div>
           </div>
-          <form onSubmit={handleLogin} className="space-y-4 px-8">
-            <Input placeholder="username" className="rounded-full border-slate-300 text-center h-12" />
-            <Input type="password" placeholder="password" className="rounded-full border-slate-300 text-center h-12" />
-            <Button type="submit" className="w-full rounded-full h-12 bg-pink-300 hover:bg-pink-400 text-slate-800 font-bold shadow-lg transition-transform active:scale-95">
+          <form onSubmit={handleLogin} className="space-y-5 px-10 py-12">
+            <Input placeholder="username" className="rounded-full border-slate-200 h-14 text-center text-lg shadow-sm" />
+            <Input type="password" placeholder="password" className="rounded-full border-slate-200 h-14 text-center text-lg shadow-sm" />
+            <Button type="submit" className="w-full rounded-full h-14 bg-pink-300 hover:bg-pink-400 text-slate-800 font-black text-lg shadow-lg active:scale-95 transition-all">
               LOGIN
             </Button>
+            <p className="text-center text-slate-400 text-sm">Lupa password? <span className="text-pink-400 font-bold">Klik di sini</span></p>
           </form>
-          <p className="text-xs text-slate-400">Belum punya akun? <span className="text-pink-400 font-bold cursor-pointer">Daftar</span></p>
         </div>
       </div>
     );
   }
 
-  // --- 3. DASHBOARD UTAMA & HALAMAN DETAIL ---
+  // --- 3. DASHBOARD & HALAMAN DETAIL ---
   return (
     <div className="min-h-screen bg-white relative font-sans overflow-x-hidden">
-      {/* Background Pink Melengkung (Atas) */}
-      <div className="absolute top-0 left-0 w-full h-[45%] bg-[#FBCFE8] rounded-b-[40px] -z-10"></div>
+      {/* Background Pink sesuai gambar */}
+      <div className="absolute top-0 left-0 w-full h-[45%] md:h-[40%] bg-[#FBCFE8] rounded-b-[60px] -z-10 shadow-sm"></div>
 
       {showProfileMenu && <ProfileModal />}
 
-      <div className="max-w-2xl mx-auto pt-10 px-6 pb-32">
-        <h1 className="text-center text-2xl font-bold text-slate-800 mb-8 tracking-tight">mobile-KIA</h1>
+      <div className="max-w-2xl mx-auto pt-12 px-6 pb-32">
+        <h1 className="text-center text-2xl font-black text-slate-800 mb-10 tracking-widest">MOBILE-KIA</h1>
 
         {activeTab === "dashboard" ? (
-          <>
-            {/* Header Profil */}
-            <div className="flex items-center justify-between mb-8 bg-white/30 p-4 rounded-[2rem] backdrop-blur-sm border border-white/20 shadow-sm">
+          <div className="animate-in fade-in duration-500">
+            {/* Header Profil Dinamis */}
+            <div className="flex items-center justify-between mb-10 bg-white/40 p-5 rounded-[2.5rem] backdrop-blur-md border border-white/40 shadow-sm">
               <div className="text-left">
-                <p className="text-lg text-slate-800 font-medium">Halo,</p>
-                <h2 className="text-2xl font-bold text-slate-900 leading-tight">Nadia Febriani</h2>
+                <p className="text-xl text-slate-700">Halo,</p>
+                <h2 className="text-2xl md:text-3xl font-black text-slate-900 leading-tight">
+                  {namaBunda}
+                </h2>
               </div>
-              <div className="w-20 h-20 rounded-full border-4 border-white shadow-md overflow-hidden bg-gray-200">
-                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Nadia" alt="profile" />
+              <div className="w-24 h-24 rounded-full border-4 border-white shadow-xl overflow-hidden bg-slate-100">
+                <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${namaBunda}`} alt="profile" />
               </div>
             </div>
 
-            {/* Menu Grid */}
-            <div className="grid grid-cols-3 gap-3 mb-10">
-              <button onClick={() => setActiveTab("info_anak")} className="bg-[#FBCFE8] border border-pink-300 rounded-3xl p-3 flex flex-col items-center gap-2 shadow-sm aspect-square justify-center active:scale-90 transition-transform">
-                <div className="w-12 h-12 bg-[#60A5FA] rounded-2xl flex items-center justify-center text-2xl text-white shadow-md">👧</div>
-                <p className="text-[9px] font-bold uppercase text-slate-800">info anak</p>
-              </button>
-              <button onClick={() => setActiveTab("riwayat_imunisasi")} className="bg-[#FBCFE8] border border-pink-300 rounded-3xl p-3 flex flex-col items-center gap-2 shadow-sm aspect-square justify-center active:scale-90 transition-transform">
-                <div className="w-12 h-12 bg-[#60A5FA] rounded-2xl flex items-center justify-center text-2xl text-white shadow-md">💉</div>
-                <p className="text-[9px] font-bold uppercase text-center text-slate-800 leading-tight">riwayat imunisasi</p>
-              </button>
-              <button onClick={() => setActiveTab("jadwal_imunisasi")} className="bg-[#FBCFE8] border border-pink-300 rounded-3xl p-3 flex flex-col items-center gap-2 shadow-sm aspect-square justify-center active:scale-90 transition-transform">
-                <div className="w-12 h-12 bg-[#60A5FA] rounded-2xl flex items-center justify-center text-2xl text-white shadow-md">📅</div>
-                <p className="text-[9px] font-bold uppercase text-center text-slate-800 leading-tight">jadwal imunisasi</p>
-              </button>
+            {/* Menu Utama (3 Kotak) */}
+            <div className="grid grid-cols-3 gap-4 mb-12">
+              {[
+                { id: "info_anak", icon: "👧", label: "info anak" },
+                { id: "riwayat_imunisasi", icon: "💉", label: "riwayat imunisasi" },
+                { id: "jadwal_imunisasi", icon: "📅", label: "jadwal imunisasi" }
+              ].map((menu) => (
+                <button 
+                  key={menu.id}
+                  onClick={() => setActiveTab(menu.id)}
+                  className="bg-[#FBCFE8] border border-pink-200 rounded-[2.5rem] p-4 flex flex-col items-center gap-3 shadow-md active:scale-90 transition-all hover:bg-pink-200"
+                >
+                  <div className="w-14 h-14 md:w-16 md:h-16 bg-[#60A5FA] rounded-2xl flex items-center justify-center text-3xl text-white shadow-lg">
+                    {menu.icon}
+                  </div>
+                  <p className="text-[10px] md:text-xs font-black uppercase text-slate-800 text-center leading-tight tracking-tighter">
+                    {menu.label}
+                  </p>
+                </button>
+              ))}
             </div>
 
-            {/* Reminder */}
-            <div className="space-y-4">
-              <h3 className="font-bold text-xl text-slate-800 px-2">Reminder</h3>
-              <div className="bg-[#3B82F6] rounded-[2.5rem] p-6 flex items-center gap-6 text-white shadow-xl relative overflow-hidden">
-                <div className="bg-white rounded-2xl p-4 text-slate-900 text-center min-w-[80px] shadow-lg">
-                  <p className="text-3xl font-bold">12</p>
-                  <p className="text-sm font-bold uppercase">Tue</p>
+            {/* Section Reminder */}
+            <div className="space-y-5">
+              <h3 className="font-black text-2xl text-slate-800 ml-2">Reminder</h3>
+              <div className="bg-[#3B82F6] rounded-[3rem] p-7 flex items-center gap-6 text-white shadow-2xl relative overflow-hidden group cursor-pointer active:scale-[0.98] transition-all">
+                <div className="bg-white rounded-3xl p-5 text-slate-900 text-center min-w-[90px] shadow-xl">
+                  <p className="text-4xl font-black">12</p>
+                  <p className="text-sm font-black uppercase tracking-widest text-blue-500">Tue</p>
                 </div>
                 <div className="z-10">
-                  <p className="text-sm font-medium mb-1 opacity-90">09.30 AM</p>
-                  <p className="text-xl font-bold leading-tight">Posyandu <br /> Bulan Mas</p>
+                  <p className="text-sm font-bold mb-1 opacity-80 uppercase tracking-widest">09.30 AM</p>
+                  <p className="text-2xl font-black leading-tight">Posyandu <br /> Bulan Mas</p>
                 </div>
-                <div className="absolute -right-4 -bottom-4 w-20 h-20 bg-white/10 rounded-full"></div>
+                <div className="absolute -right-8 -bottom-8 w-32 h-32 bg-white/10 rounded-full group-hover:scale-125 transition-transform duration-700"></div>
               </div>
             </div>
-          </>
+          </div>
         ) : (
-          /* Halaman Detail (Info Anak / Riwayat / Jadwal) */
-          <div className="bg-white/80 backdrop-blur-md rounded-[3rem] p-6 shadow-xl border border-white min-h-[400px]">
-             <button onClick={() => setActiveTab("dashboard")} className="text-slate-400 font-bold mb-4 flex items-center gap-2 hover:text-pink-400 transition-colors">
-               ← Kembali ke Dashboard
+          /* AREA HALAMAN DETAIL */
+          <div className="bg-white/90 backdrop-blur-xl rounded-[3.5rem] p-8 shadow-2xl border border-white animate-in slide-in-from-right duration-300">
+             <button 
+               onClick={() => setActiveTab("dashboard")} 
+               className="bg-slate-100 text-slate-500 px-6 py-2 rounded-full font-bold text-sm mb-8 hover:bg-pink-100 hover:text-pink-600 transition-all"
+             >
+               ← Kembali Ke Beranda
              </button>
+
              {activeTab === "info_anak" && (
-               <div className="animate-in fade-in zoom-in duration-300">
-                 <h2 className="text-2xl font-bold text-slate-800 mb-4">Informasi Anak</h2>
-                 <div className="bg-blue-50 p-6 rounded-3xl border-l-8 border-blue-400 shadow-sm">
-                    <p className="text-blue-600 font-bold">Budi Pratama</p>
-                    <p className="text-slate-600">Umur: 14 Bulan | Berat: 10.5 Kg</p>
+               <div className="space-y-6">
+                 <h2 className="text-3xl font-black text-slate-800">Detail Anak</h2>
+                 <div className="bg-blue-50 p-8 rounded-[2.5rem] border-l-[12px] border-blue-400 shadow-inner">
+                    <p className="text-xs font-black text-blue-400 uppercase tracking-[0.2em] mb-2">Nama Anak Bunda {namaBunda.split(' ')[0]}</p>
+                    <h3 className="text-3xl font-black text-slate-800">Budi Pratama</h3>
+                    <div className="mt-6 flex gap-4">
+                       <span className="bg-white px-5 py-2 rounded-2xl shadow-sm font-bold text-slate-600">👦 14 Bulan</span>
+                       <span className="bg-white px-5 py-2 rounded-2xl shadow-sm font-bold text-slate-600">⚖️ 10.5 Kg</span>
+                    </div>
                  </div>
                </div>
              )}
+
              {activeTab === "riwayat_imunisasi" && (
-               <div className="animate-in fade-in zoom-in duration-300">
-                 <h2 className="text-2xl font-bold text-slate-800 mb-4">Riwayat Imunisasi</h2>
-                 <div className="space-y-3">
-                   <div className="p-4 bg-green-50 rounded-2xl flex justify-between border border-green-100">
-                     <span className="font-bold">BCG & Polio 1</span>
-                     <span className="text-green-600 text-sm font-bold underline">Selesai</span>
+               <div className="space-y-4">
+                 <h2 className="text-3xl font-black text-slate-800 mb-6">Riwayat</h2>
+                 {["BCG & Polio 1", "DPT-HB-Hib 1", "PCV 1"].map((v, i) => (
+                   <div key={i} className="bg-white p-5 rounded-[2rem] border border-slate-100 flex justify-between items-center shadow-sm">
+                      <span className="font-bold text-slate-700">{v}</span>
+                      <span className="bg-green-100 text-green-600 px-4 py-1 rounded-full text-xs font-black uppercase">Selesai</span>
                    </div>
-                 </div>
+                 ))}
                </div>
              )}
+
              {activeTab === "jadwal_imunisasi" && (
-               <div className="animate-in fade-in zoom-in duration-300">
-                 <h2 className="text-2xl font-bold text-slate-800 mb-4">Jadwal Imunisasi</h2>
-                 <div className="p-4 bg-pink-50 rounded-2xl border-l-8 border-pink-400">
-                    <p className="font-bold">Campak-Rubela</p>
-                    <p className="text-sm text-pink-500 font-bold">Estimasi: Mei 2026</p>
+               <div className="space-y-4">
+                 <h2 className="text-3xl font-black text-slate-800 mb-6">Jadwal</h2>
+                 <div className="bg-pink-50 p-6 rounded-[2.5rem] border-l-[12px] border-pink-400">
+                    <p className="font-black text-slate-800 text-xl text-pink-600">Campak-Rubela</p>
+                    <p className="text-slate-500 font-bold mt-1">Estimasi: Mei 2026</p>
                  </div>
                </div>
              )}
@@ -174,14 +208,24 @@ export default function MobileKIApp() {
       </div>
 
       {/* NAVBAR BAWAH */}
-      <div className="fixed bottom-0 left-0 right-0 flex justify-center p-4">
-        <div className="w-full max-w-md bg-white/90 backdrop-blur-md border border-pink-100 p-4 flex justify-around items-center rounded-[2.5rem] shadow-2xl">
-           <span onClick={() => {setActiveTab("dashboard"); setShowProfileMenu(false);}} className={`text-3xl cursor-pointer hover:scale-110 transition-transform ${activeTab === 'dashboard' ? 'text-pink-400' : 'text-pink-200'}`}>🏠</span>
-           <span className="text-pink-200 text-3xl cursor-pointer">🔍</span>
-           <span className="text-pink-200 text-3xl cursor-pointer">💬</span>
-           <span className="text-pink-200 text-3xl cursor-pointer">🔔</span>
+      <div className="fixed bottom-0 left-0 right-0 flex justify-center p-6 z-40">
+        <div className="w-full max-w-md bg-white/80 backdrop-blur-2xl border border-white/50 p-4 flex justify-around items-center rounded-[3rem] shadow-[0_20px_50px_rgba(0,0,0,0.1)]">
+           <span 
+              onClick={() => {setActiveTab("dashboard"); setShowProfileMenu(false);}} 
+              className={`text-3xl cursor-pointer transition-all hover:scale-125 ${activeTab === 'dashboard' ? 'text-pink-400 drop-shadow-md' : 'text-slate-200'}`}
+           >
+              🏠
+           </span>
+           <span className="text-slate-200 text-3xl cursor-pointer hover:text-pink-200 transition-colors">🔍</span>
+           <span className="text-slate-200 text-3xl cursor-pointer hover:text-pink-200 transition-colors">💬</span>
+           <span className="text-slate-200 text-3xl cursor-pointer hover:text-pink-200 transition-colors">🔔</span>
            {/* IKON PROFIL UNTUK SETTING */}
-           <span onClick={() => setShowProfileMenu(true)} className={`text-3xl cursor-pointer hover:scale-110 transition-transform ${showProfileMenu ? 'text-pink-400' : 'text-pink-200'}`}>👤</span>
+           <span 
+              onClick={() => setShowProfileMenu(true)} 
+              className={`text-3xl cursor-pointer transition-all hover:scale-125 ${showProfileMenu ? 'text-pink-400 drop-shadow-md' : 'text-slate-200'}`}
+           >
+              👤
+           </span>
         </div>
       </div>
     </div>
