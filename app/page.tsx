@@ -81,7 +81,7 @@ export default function MobileKIAppFinal() {
             <div className="text-center space-y-2">
               <p className="text-xs font-black text-slate-400 uppercase tracking-widest">Siapa nama Bunda?</p>
               <Input 
-                placeholder="Ketik Intan / Olive" 
+                placeholder="user name" 
                 value={tempInput}
                 onChange={(e) => setTempInput(e.target.value)}
                 className="rounded-full border-slate-200 h-14 text-center text-lg font-bold shadow-sm focus:ring-pink-300" 
