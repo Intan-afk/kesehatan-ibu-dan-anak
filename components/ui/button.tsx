@@ -1,67 +1,92 @@
-import * as React from "react"
-import { cva, type VariantProps } from "class-variance-authority"
-import { Slot } from "radix-ui"
+"use client";
+import React from "react";
 
-import { cn } from "@/lib/utils"
+type Variant = "primary" | "ghost" | "danger" | "glow";
+type Size    = "sm" | "md" | "lg";
 
-const buttonVariants = cva(
-  "group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
-  {
-    variants: {
-      variant: {
-        default: "bg-primary text-primary-foreground [a]:hover:bg-primary/80",
-        outline:
-          "border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",
-        secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80 aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
-        ghost:
-          "hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50",
-        destructive:
-          "bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40",
-        link: "text-primary underline-offset-4 hover:underline",
-      },
-      size: {
-        default:
-          "h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
-        xs: "h-6 gap-1 rounded-[min(var(--radius-md),10px)] px-2 text-xs in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3",
-        sm: "h-7 gap-1 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3.5",
-        lg: "h-9 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
-        icon: "size-8",
-        "icon-xs":
-          "size-6 rounded-[min(var(--radius-md),10px)] in-data-[slot=button-group]:rounded-lg [&_svg:not([class*='size-'])]:size-3",
-        "icon-sm":
-          "size-7 rounded-[min(var(--radius-md),12px)] in-data-[slot=button-group]:rounded-lg",
-        "icon-lg": "size-9",
-      },
-    },
-    defaultVariants: {
-      variant: "default",
-      size: "default",
-    },
-  }
-)
-
-function Button({
-  className,
-  variant = "default",
-  size = "default",
-  asChild = false,
-  ...props
-}: React.ComponentProps<"button"> &
-  VariantProps<typeof buttonVariants> & {
-    asChild?: boolean
-  }) {
-  const Comp = asChild ? Slot.Root : "button"
-
-  return (
-    <Comp
-      data-slot="button"
-      data-variant={variant}
-      data-size={size}
-      className={cn(buttonVariants({ variant, size, className }))}
-      {...props}
-    />
-  )
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: Variant;
+  size?: Size;
+  loading?: boolean;
+  icon?: React.ReactNode;
 }
 
-export { Button, buttonVariants }
+const variantStyles: Record<Variant, React.CSSProperties & { "--hover-bg"?: string }> = {
+  primary: {
+    background: "linear-gradient(135deg, #9b5de5 0%, #ff4d8d 100%)",
+    color: "#fff",
+    border: "none",
+    boxShadow: "0 4px 24px rgba(155,93,229,0.45), inset 0 1px 0 rgba(255,255,255,0.2)",
+  },
+  ghost: {
+    background: "rgba(255,255,255,0.06)",
+    color: "rgba(248,240,255,0.9)",
+    border: "1px solid rgba(255,255,255,0.14)",
+    backdropFilter: "blur(12px)",
+  },
+  danger: {
+    background: "linear-gradient(135deg, #ff4d8d 0%, #ff006e 100%)",
+    color: "#fff",
+    border: "none",
+    boxShadow: "0 4px 20px rgba(255,77,141,0.4)",
+  },
+  glow: {
+    background: "transparent",
+    color: "#00f5d4",
+    border: "1px solid rgba(0,245,212,0.4)",
+    boxShadow: "0 0 20px rgba(0,245,212,0.2), inset 0 0 20px rgba(0,245,212,0.05)",
+  },
+};
+
+const sizeStyles: Record<Size, React.CSSProperties> = {
+  sm: { padding: "8px 18px",  fontSize: 12, borderRadius: 10 },
+  md: { padding: "12px 26px", fontSize: 14, borderRadius: 14 },
+  lg: { padding: "16px 36px", fontSize: 16, borderRadius: 18 },
+};
+
+export function Button({ variant = "primary", size = "md", loading, icon, children, style, ...props }: ButtonProps) {
+  const [pressed, setPressed] = React.useState(false);
+
+  return (
+    <button
+      {...props}
+      disabled={props.disabled || loading}
+      onMouseDown={() => setPressed(true)}
+      onMouseUp={() => setPressed(false)}
+      onMouseLeave={() => setPressed(false)}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 8,
+        fontFamily: "'DM Sans', sans-serif",
+        fontWeight: 600,
+        letterSpacing: "0.02em",
+        cursor: props.disabled || loading ? "not-allowed" : "pointer",
+        transition: "all 0.2s cubic-bezier(0.34,1.56,0.64,1)",
+        transform: pressed ? "scale(0.96)" : "scale(1)",
+        opacity: props.disabled ? 0.45 : 1,
+        outline: "none",
+        userSelect: "none",
+        whiteSpace: "nowrap",
+        ...variantStyles[variant],
+        ...sizeStyles[size],
+        ...style,
+      }}
+    >
+      {loading ? (
+        <span style={{
+          width: 14, height: 14,
+          border: "2px solid rgba(255,255,255,0.3)",
+          borderTopColor: "white",
+          borderRadius: "50%",
+          animation: "spin-slow 0.7s linear infinite",
+          display: "inline-block",
+        }} />
+      ) : icon}
+      {children}
+    </button>
+  );
+}
+
+export default Button;
